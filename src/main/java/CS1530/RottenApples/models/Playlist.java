@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Playlists")
 public class Playlist {
     @Id
-    private Long id;
+    private int id;
     private Movie movie;
     private User user;
     private String playlistTitle;
-    private List <Movie> movieTitles = new ArrayList<>();
+    List <Movie> movieTitles = new ArrayList<>();
     private boolean isPrivate;
     private int maxMovies = 15;
     private int moviesAdded;
@@ -23,7 +23,7 @@ public class Playlist {
         
     }
 
-    public Playlist(String playlistTitle, Long id) {
+    public Playlist(String playlistTitle, int id) {
         this.playlistTitle = playlistTitle;
         this.id = id;
     }
@@ -54,11 +54,11 @@ public class Playlist {
        this.isPrivate = isPrivate;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

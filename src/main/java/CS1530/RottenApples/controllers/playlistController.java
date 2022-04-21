@@ -40,9 +40,9 @@ public class playlistController {
     @PostMapping("/playlists")
     public String createPlaylistHome(String playlistTitle) {
         Playlist playlist = new Playlist();
-        long rand = ThreadLocalRandom.current().nextLong(0, 1000);
+        int rand = ThreadLocalRandom.current().nextInt(0, 1000);
         while(playlistRepository.existsById(rand)) {
-            rand = ThreadLocalRandom.current().nextLong();
+            rand = ThreadLocalRandom.current().nextInt(0, 1000);
         }
         playlist.setId(rand);
         
@@ -64,17 +64,20 @@ public class playlistController {
 
 */
    
-    @PostMapping("/playlists/{id}/movies")
-    public String addMovieToPlaylist(@PathVariable Long id, @RequestParam("movieTitle") String movieTitle) {
-       Playlist playlist = playlistRepository.findById(id).get();
+    @PostMapping("/playlists/{playlistId}/movies")
+    public String addMovieToPlaylist(@PathVariable int playlistId, @RequestParam("movieId") int movieId, Model model) {
+        Playlist playlist = playlistRepository.findById(playlistId).get();
 
-       //List<Movie> movieList = movieImpl.listAllMovies(movieTitle);
-       //playlistImpl.addToPlaylist(id, movieTitle);
-       Movie movie = movieRepository.findMovie(movieTitle);
-       playlist.getMovieTitles().add(movie);
-       int num_movies = playlist.getMoviesAdded();
-       num_movies++;
-       playlist.setMoviesAdded(num_movies);
-       return "redirect:/playlists";
+        //List<Movie> movieList = movieImpl.listAllMovies(movieTitle);
+        //playlistImpl.addToPlaylist(id, movieTitle);
+        Movie movie = movieRepository.findById(movieId).get();
+        playlist.getMovieTitles().add(movie);
+        model.addAttribute("moviesInPlaylist", playlist.getMovies());
+        playlistRepository.save(playlist);
+        int num_movies = playlist.getMoviesAdded();
+        num_movies++;
+        playlist.setMoviesAdded(num_movies);
+        playlistRepository.save(playlist);
+        return "redirect:/playlists";
     }
 }
